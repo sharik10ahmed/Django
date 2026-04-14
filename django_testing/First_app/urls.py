@@ -1,6 +1,7 @@
+from django.contrib import admin
 from django.urls import path
-from .views import *
+from .views import * ## Importing all views from the current app's views.py file
 
 urlpatterns = [
-    path('students/', student_list, name='student_list'),
+    path('categorie', category_products, name='category_products'),
 ]
