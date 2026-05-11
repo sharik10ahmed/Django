@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Student List</h2>
+
+    <a href="{% url 'add_student' %}" class="btn btn-primary">
+        Add Student
+    </a>
+</div>
+
+
+<!-- Search + Filter Form -->
+<form method="GET" class="row g-3 mb-4">
+
+    <div class="col-md-4">
+        <input type="text"
+               name="search"
+               class="form-control"
+               placeholder="Search by ID, Name, Class, Address"
+               value="{{ request.GET.search }}">
+    </div>
+
+    <div class="col-md-3">
+        <input type="date"
+               name="start_date"
+               class="form-control"
+               value="{{ request.GET.start_date }}">
+    </div>
+
+    <div class="col-md-3">
+        <input type="date"
+               name="end_date"
+               class="form-control"
+               value="{{ request.GET.end_date }}">
+    </div>
+
+    <div class="col-md-2 d-grid">
+        <button type="submit" class="btn btn-success">
+            Search
+        </button>
+    </div>
+
+</form>
+
+
+<table class="table table-bordered table-striped align-middle">
+
+    <thead class="table-dark">
+
+        <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Class</th>
+            <th>Email</th>
+            <th>DOB</th>
+            <th>Address</th>
+            <th>Date Added</th>
+            <th>Actions</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    {% for student in students %}
+
+        <tr>
+
+            <td>{{ student.id }}</td>
+
+            <td>
+                {% if student.image %}
+                    <img src="{{ student.image.url }}"
+                         width="70"
+                         height="70"
+                         style="object-fit:cover;">
+                {% else %}
+                    No Image
+                {% endif %}
+            </td>
+
+            <td>{{ student.name }}</td>
+            <td>{{ student.student_class }}</td>
+            <td>{{ student.email }}</td>
+            <td>{{ student.date_of_birth }}</td>
+            <td>{{ student.address }}</td>
+            <td>{{ student.date_added|date:"d M Y" }}</td>
+
+            <td>
+
+                <a href="{% url 'update_student' student.id %}"
+                   class="btn btn-warning btn-sm">
+                    Edit
+                </a>
+
+                <a href="{% url 'delete_student' student.id %}"
+                   class="btn btn-danger btn-sm">
+                    Delete
+                </a>
+
+            </td>
+
+        </tr>
+
+    {% empty %}
+
+        <tr>
+            <td colspan="9" class="text-center">
+                No Students Found
+            </td>
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+
+<!-- Pagination -->
+
+<nav>
+
+    <ul class="pagination justify-content-center">
+
+        {% if students.has_previous %}
+
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page=1&search={{ request.GET.search }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}">
+                    First
+                </a>
+            </li>
+
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ students.previous_page_number }}&search={{ request.GET.search }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}">
+                    Previous
+                </a>
+            </li>
+
+        {% endif %}
+
+
+        <li class="page-item active">
+            <span class="page-link">
+                Page {{ students.number }} of {{ students.paginator.num_pages }}
+            </span>
+        </li>
+
+
+        {% if students.has_next %}
+
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ students.next_page_number }}&search={{ request.GET.search }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}">
+                    Next
+                </a>
+            </li>
+
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ students.paginator.num_pages }}&search={{ request.GET.search }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}">
+                    Last
+                </a>
+            </li>
+
+        {% endif %}
+
+    </ul>
+
+</nav>
+
+{% endblock %}

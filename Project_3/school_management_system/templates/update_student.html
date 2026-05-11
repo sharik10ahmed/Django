@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Update Student</h2>
+
+<form method="POST" enctype="multipart/form-data">
+
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label>Name</label>
+        <input type="text" name="name" value="{{ student.name }}" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label>Class</label>
+        <input type="text" name="student_class" value="{{ student.student_class }}" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label>Email</label>
+        <input type="email" name="email" value="{{ student.email }}" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label>Date of Birth</label>
+        <input type="date" name="date_of_birth" value="{{ student.date_of_birth|date:'Y-m-d' }}" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label>Current Image</label><br>
+
+        {% if student.image %}
+            <img src="{{ student.image.url }}" width="100">
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        <label>New Image</label>
+        <input type="file" name="image" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label>Address</label>
+        <textarea name="address" class="form-control">{{ student.address }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Update Student
+    </button>
+
+</form>
+
+{% endblock %}
