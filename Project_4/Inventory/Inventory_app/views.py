@@ -8,8 +8,10 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives, send_mail
 from django.conf import settings
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 from .models import Product, UserProfile
 from .forms import ProductForm, RegisterForm, ProfileForm
@@ -185,13 +187,22 @@ def register_user(request):
             login(request, user)
 
             # SEND WELCOME EMAIL
-            send_mail(
+            html_message = render_to_string(
+                'emails/welcome_email.html',
+                {
+                    'user': user,
+                    'site_url': request.build_absolute_uri('/'),
+                }
+            )
+
+            email = EmailMultiAlternatives(
                 'Welcome to Inventory Project',
-                f'Hello {user.username}, Welcome to Inventory System.',
+                strip_tags(html_message),
                 settings.DEFAULT_FROM_EMAIL,
                 [user.email],
-                fail_silently=False,
             )
+            email.attach_alternative(html_message, 'text/html')
+            email.send(fail_silently=False)
 
             messages.success(
                 request,
