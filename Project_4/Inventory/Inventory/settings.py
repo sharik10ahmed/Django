@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Inventory_app' ##Second Changes App Name
+    'Inventory_app.apps.InventoryAppConfig', ##Second Changes App Name
 ]
 
 MIDDLEWARE = [
@@ -121,9 +121,21 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR/ 'media'
 
 
-LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'admin@gmail.com'
+# EMAIL CONFIGURATION
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+
+EMAIL_PORT = 587
+
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'sharikahmed731@gmail.com'
+
+EMAIL_HOST_PASSWORD = 'tqyo drfl lkax wmbk'
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
